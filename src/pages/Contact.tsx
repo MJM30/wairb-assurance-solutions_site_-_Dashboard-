@@ -191,9 +191,9 @@ const Contact = () => {
                   <h2 className="text-2xl font-bold">Nos Coordonnées</h2>
                   <div className="grid sm:grid-cols-2 gap-6">
                     <div className="flex items-start gap-4 p-6 bg-surface-sunken rounded-2xl border border-primary/5">
-                      <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center shrink-0">
+                      <a href="mailto:contact@wairb.com" className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center shrink-0 hover:bg-primary/20 transition-colors cursor-pointer">
                         <Mail className="h-5 w-5 text-primary" />
-                      </div>
+                      </a>
                       <div>
                         <p className="text-xs font-bold text-muted-foreground uppercase mb-1">E-mails</p>
                         <p className="font-semibold break-all text-sm mb-1">contact@wairb.com</p>

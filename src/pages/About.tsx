@@ -254,13 +254,13 @@ const About = () => {
             <div className="w-full lg:w-1/2 px-4 mb-16 lg:mb-0">
                <div className="grid grid-cols-1 gap-6 max-w-md">
                   <Reveal animation="reveal-left">
-                    <div className="space-y-4">
+                    <div className="relative group">
                       <div className="aspect-[4/5] rounded-2xl overflow-hidden shadow-xl">
-                        <img src="/images/img_DG.jpeg" alt="Directeur Général" className="w-full h-full object-cover" />
+                        <img src="/images/img_president.png" alt="Directeur Général" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                       </div>
-                      <div>
-                        <h4 className="font-bold text-xl">Président de la Filiale RDC</h4>
-                        <p className="text-muted-foreground text-sm leading-relaxed">Engagement envers l'excellence opérationnelle.</p>
+                      <div className="absolute -bottom-6 -right-6 bg-white p-6 rounded-xl shadow-xl max-w-[240px]">
+                        <h4 className="font-bold text-lg">Président de la Filiale RDC</h4>
+                        <p className="text-primary text-sm font-semibold">Engagement envers l'excellence opérationnelle.</p>
                       </div>
                     </div>
                   </Reveal>
