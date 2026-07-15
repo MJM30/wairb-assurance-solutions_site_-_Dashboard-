@@ -6,23 +6,30 @@ const steps = [
   {
     number: "01.",
     title: "Évaluation de vos besoins",
-    description: "Nous analysons votre profil et vos risques pour définir la couverture idéale au meilleur prix.",
+    description: "Nous analysons vos besoins assurantielles par rapport aux risque en cours dont la survenance peut oberer vos activités.",
     image: "/images/img_03.jpg",
     quote: "Une analyse précise pour une protection optimale."
   },
   {
     number: "02.",
     title: "Négociation & Sélection",
-    description: "L'optivisation assurentielles par la mise en concurrences des compagnies d'assurances en vue de l'obtention des meilleures offres du marché;",
+    description: "Nous procedons à la mise en concurence de toutes les compagnies agréé en RDC en vue de vous obetenir la meilleurs offre technique au tarif le plus bas",
     image: "/images/img_02.jpg",
     quote: "Le meilleur du marché au service de vos intérêts."
   },
   {
     number: "03.",
-    title: "Accompagnement & Sinistres",
-    description: "Nous gérons vos contrats au quotidien et vous assistons personnellement en cas de sinistre.",
-    image: "/images/img_11.jpg",
+    title: "Accompagnement sinistre",
+    description: "Nous assurons le suivi et le respect des engagement contractuels de l'assureur en agissant comme votre avocat technique pour garantir le déclenchement immédiat de l'instant du sinistre, sous blocage administratif jusqu'au reglement.",
+    image: "/images/img_07.jpg",
     quote: "Une réactivité exemplaire quand vous en avez le plus besoin."
+  },
+  {
+    number: "04.",
+    title: "Sensibilisation, formation & suivi",
+    description: "Nous gérons vos contrats au quotidien et vous formons pour une meilleure culture du risque.",
+    image: "/images/img_11.jpg",
+    quote: "Un accompagnement continu pour une protection pérenne."
   },
 ];
 
@@ -41,12 +48,12 @@ const ProcessSection = () => {
         <div className="max-w-xl mb-16">
           <Reveal animation="reveal">
             <span className="inline-block py-1 px-3 mb-4 text-xs font-semibold tracking-widest text-primary uppercase bg-primary-foreground/10 rounded-full border border-primary-foreground/10 backdrop-blur-sm">
-              NOTRE PROCESSUS
+              NOTRE CHAMP D'ACTION
             </span>
           </Reveal>
           <Reveal animation="reveal" delay={200}>
             <h2 className="text-3xl md:text-5xl font-extrabold text-primary-foreground mb-6 leading-tight">
-              Un processus simple, efficace en trois étapes
+              Un processus simple, efficace en quatres étapes
             </h2>
           </Reveal>
         </div>

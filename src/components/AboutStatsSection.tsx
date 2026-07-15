@@ -46,7 +46,7 @@ const AboutStatsSection = () => {
               </Reveal>
               <Reveal animation="reveal-right" delay={200}>
                 <h2 className="text-3xl md:text-5xl font-extrabold text-foreground mb-6 leading-tight">
-                  Nous sommes l'extension de votre <span className="text-primary">sécurité au quotidien</span>
+                  Nous assurons la meilleure <span className="text-primary">Couverture de vos risque</span>
                 </h2>
               </Reveal>
               <Reveal animation="reveal-right" delay={400}>

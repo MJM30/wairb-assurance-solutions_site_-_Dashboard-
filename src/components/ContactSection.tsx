@@ -171,8 +171,8 @@ const ContactSection = () => {
                     </a>
                     <div>
                       <p className="text-xs font-bold text-muted-foreground uppercase mb-1">E-mails</p>
-                      <p className="font-semibold break-all text-sm mb-1">contact@wairb.com</p>
-                      <p className="font-semibold break-all text-sm">fleury.ngoma@wairb.com</p>
+                      <a href="mailto:contact@wairb.com" className="font-semibold break-all text-sm mb-1 hover:text-primary transition-colors block">contact@wairb.com</a>
+                      <a href="mailto:fleury.ngoma@wairb.com" className="font-semibold break-all text-sm hover:text-primary transition-colors block">fleury.ngoma@wairb.com</a>
                     </div>
                   </div>
                   <div className="flex items-start gap-4 p-6 bg-white rounded-2xl border border-primary/5 shadow-sm">
@@ -181,7 +181,7 @@ const ContactSection = () => {
                     </div>
                     <div>
                       <p className="text-xs font-bold text-muted-foreground uppercase mb-1">Téléphones</p>
-                      <p className="font-semibold text-sm mb-1">Kin: +243 822 135 376</p>
+                      <p className="font-semibold text-sm mb-1">Kin: +243 962 778 967</p>
                       <p className="font-semibold text-sm">Abj: +225 27 22 40 03</p>
                     </div>
                   </div>
@@ -193,11 +193,11 @@ const ContactSection = () => {
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
                       <p className="text-xs font-bold text-muted-foreground uppercase mb-1">Kinshasa (RDC)</p>
-                      <p className="font-semibold text-sm leading-relaxed">Avenue des Aviateurs n°3<br/>Quartier de la Gare, Commune de la Gombe</p>
+                      <p className="font-semibold text-sm leading-relaxed">M8X7+J82, Dongo, Kinshasa</p>
                     </div>
                     <div>
                       <p className="text-xs font-bold text-muted-foreground uppercase mb-1">Abidjan (RCI)</p>
-                      <p className="font-semibold text-sm leading-relaxed">Cocody Riviera Palmeraie<br/>3e étage, face à la Sodéc</p>
+                      <p className="font-semibold text-sm leading-relaxed">Cocody Riviera Palmeraie<br/>3e étage, face à la Sodéci</p>
                     </div>
                   </div>
                 </div>
@@ -209,7 +209,7 @@ const ContactSection = () => {
                 <h3 className="text-2xl font-bold">Géo-localisation (Kinshasa)</h3>
                 <div className="rounded-3xl overflow-hidden h-[400px] shadow-2xl border-4 border-white bg-slate-50">
                   <iframe 
-                    src="https://www.google.com/maps?q=Avenue+des+Aviateurs+3,+Gombe,+Kinshasa&output=embed" 
+                    src="https://www.google.com/maps?q=M8X7%2BJ82,+Dongo,+Kinshasa&output=embed" 
                     width="100%" 
                     height="100%" 
                     style={{ border: 0 }} 

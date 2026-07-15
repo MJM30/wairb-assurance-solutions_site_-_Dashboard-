@@ -1,5 +1,8 @@
+"use client";
+
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X, Phone, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -10,11 +13,11 @@ interface NavbarProps {
 
 const Navbar = ({ onRequestClick }: NavbarProps) => {
   const [open, setOpen] = useState(false);
-  const location = useLocation();
+  const pathname = usePathname();
 
   const isActive = (path: string) => {
-    if (path === "/" && location.pathname === "/") return true;
-    if (path !== "/" && location.pathname.startsWith(path)) return true;
+    if (path === "/" && pathname === "/") return true;
+    if (path !== "/" && pathname.startsWith(path)) return true;
     return false;
   };
 
@@ -32,16 +35,16 @@ const Navbar = ({ onRequestClick }: NavbarProps) => {
         <div className="container flex justify-between items-center">
            <div className="flex items-center gap-4 md:gap-6 font-medium">
               <span className="flex items-center gap-1.5 opacity-90 hover:opacity-100 transition-opacity">
-                <Phone className="h-3.5 w-3.5" /> 
-                <span className="hidden sm:inline">+243 822 135 376</span>
+                <Phone className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline">+243 962 778 967</span>
               </span>
               <span className="flex items-center gap-1.5 opacity-90 hover:opacity-100 transition-opacity">
-                <Mail className="h-3.5 w-3.5" /> 
+                <Mail className="h-3.5 w-3.5" />
                 <span className="hidden sm:inline">contact@wairb.com</span>
               </span>
            </div>
            <div>
-              <Link to="/actualites" className="font-bold uppercase tracking-wider text-[10px] md:text-xs bg-white/10 hover:bg-white/20 px-3 py-1 rounded-full transition-all flex items-center gap-2">
+              <Link href="/actualites" className="font-bold uppercase tracking-wider text-[10px] md:text-xs bg-white/10 hover:bg-white/20 px-3 py-1 rounded-full transition-all flex items-center gap-2">
                 Actualités <span className="hidden sm:inline">de l'entreprise</span>
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
@@ -51,11 +54,11 @@ const Navbar = ({ onRequestClick }: NavbarProps) => {
            </div>
         </div>
       </div>
-      
+
       {/* Main Navbar */}
       <div className="bg-card/90 backdrop-blur-md border-b card-shadow transition-colors">
         <div className="container flex items-center justify-between h-16">
-        <Link to="/" className="flex items-center transition-transform hover:scale-105 duration-300">
+        <Link href="/" className="flex items-center transition-transform hover:scale-105 duration-300">
           <img
             src="/images/Logo_WAIRB_Def.png"
             alt="WAIRB DRC Logo"
@@ -69,11 +72,11 @@ const Navbar = ({ onRequestClick }: NavbarProps) => {
             return (
               <Link
                 key={link.id}
-                to={link.href}
+                href={link.href}
                 className={cn(
                   "relative px-4 py-2 text-sm font-semibold transition-all duration-300 rounded-lg group",
-                  active 
-                    ? "text-primary bg-primary/5" 
+                  active
+                    ? "text-primary bg-primary/5"
                     : "text-muted-foreground hover:text-foreground hover:bg-muted"
                 )}
               >
@@ -111,11 +114,11 @@ const Navbar = ({ onRequestClick }: NavbarProps) => {
               return (
                 <Link
                   key={link.id}
-                  to={link.href}
+                  href={link.href}
                   className={cn(
                     "flex items-center justify-between px-4 py-3 text-sm font-semibold rounded-xl transition-colors",
-                    active 
-                      ? "text-primary bg-primary/10" 
+                    active
+                      ? "text-primary bg-primary/10"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted"
                   )}
                   onClick={() => setOpen(false)}

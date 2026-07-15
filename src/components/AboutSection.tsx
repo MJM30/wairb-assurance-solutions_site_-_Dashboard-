@@ -3,7 +3,7 @@ import Reveal from "./Reveal";
 import StatNumber from "./StatNumber";
 
 const stats = [
-  { icon: Shield, label: "Types d'assurance", value: "4", change: "" },
+  { icon: Shield, label: "Types d'assurance", value: "+ 15", change: "" },
   { icon: Users, label: "Clients satisfaits", value: "500", change: "+12.5%" },
   { icon: Globe, label: "Partenaires", value: "15", change: "" },
   { icon: Award, label: "Plus de 5 Années d'expertise", value: "5+", change: "" },

@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useCallback } from "react";
 import { X, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -14,7 +16,6 @@ import RCManifestationForm from "@/components/forms/RCManifestationForm";
 import RCProfessionnelleForm from "@/components/forms/RCProfessionnelleForm";
 import TousRisquesChantiersForm from "@/components/forms/TousRisquesChantiersForm";
 import ManipulationProduitsPetroliersForm from "@/components/forms/ManipulationProduitsPetroliersForm";
-import { getNextApiUrl } from "@/lib/api";
 
 interface MultiStepFormProps {
   open: boolean;
@@ -51,19 +52,18 @@ const MultiStepForm = ({ open, onClose, preselectedType }: MultiStepFormProps) =
   const [insuranceType, setInsuranceType] = useState(preselectedType || "");
   const [submitted, setSubmitted] = useState(false);
   const [refNumber, setRefNumber] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSelectType = useCallback((type: string) => {
     setInsuranceType(type);
     setStep(3);
   }, []);
 
-  const [isLoading, setIsLoading] = useState(false);
-
   const handleSubmit = useCallback(async (data: Record<string, unknown>) => {
     const ref = generateRef();
     setIsLoading(true);
     try {
-      const response = await fetch(getNextApiUrl("/api/clients"), {
+      const response = await fetch("/api/clients", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -88,9 +88,9 @@ const MultiStepForm = ({ open, onClose, preselectedType }: MultiStepFormProps) =
 
       setRefNumber(ref);
       setSubmitted(true);
-    } catch (error) {
-      console.error("Erreur lors de l'enregistrement du client :", error);
-      alert("Impossible d'enregistrer la demande pour le moment. Vérifiez que l'API Next.js et la base de données sont bien démarrées.");
+    } catch (err) {
+      console.error("Error saving client:", err);
+      alert("Impossible d'enregistrer la demande pour le moment. Vérifiez que la base de données est bien démarrée.");
     } finally {
       setIsLoading(false);
     }
@@ -108,11 +108,11 @@ const MultiStepForm = ({ open, onClose, preselectedType }: MultiStepFormProps) =
   const stepLabels = ["Informations", "Type d'assurance", "Formulaire"];
 
   return (
-    <div 
+    <div
       className={`fixed inset-0 z-50 flex items-start justify-center bg-foreground/30 backdrop-blur-sm overflow-y-auto py-6 transition-opacity duration-[2000ms] ${open ? "opacity-100" : "opacity-0 pointer-events-none"}`}
       onClick={(e) => e.target === e.currentTarget && resetForm()}
     >
-      <div className={`bg-card w-full max-w-3xl mx-4 rounded-xl border card-shadow-lg reveal ${open ? "active" : ""}`}>
+      <div className="bg-card w-full max-w-3xl mx-4 rounded-xl border card-shadow-lg">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b">
           <div>
@@ -136,7 +136,7 @@ const MultiStepForm = ({ open, onClose, preselectedType }: MultiStepFormProps) =
                 Demande envoyée avec succès !
               </h3>
               <p className="text-sm text-muted-foreground max-w-md mx-auto">
-                Votre demande a été enregistrée. Notre équipe vous contactera sous 24h.
+                Votre demande a été enregistrée dans notre base de données. Notre équipe vous contactera sous 24h.
               </p>
               <div className="inline-block px-5 py-3 rounded-xl bg-accent border">
                 <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">Numéro de référence</p>

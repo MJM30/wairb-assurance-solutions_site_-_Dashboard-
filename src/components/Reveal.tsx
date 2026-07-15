@@ -17,22 +17,28 @@ const Reveal: React.FC<RevealProps> = ({
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const node = ref.current;
-    if (!node) return;
-
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
-          observer.disconnect();
+        } else {
+          setIsVisible(false);
         }
       },
-      { threshold: 0.1 }
+      {
+        threshold: 0.1,
+      }
     );
 
-    observer.observe(node);
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
 
-    return () => observer.disconnect();
+    return () => {
+      if (ref.current) {
+        observer.unobserve(ref.current);
+      }
+    };
   }, []);
 
   return (

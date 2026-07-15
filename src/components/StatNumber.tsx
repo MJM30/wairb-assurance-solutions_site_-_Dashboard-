@@ -1,6 +1,7 @@
+"use client";
+
 import React from "react";
 import CountUp from "react-countup";
-
 interface StatNumberProps {
   value: string; // "4+", "500+", "15+", "10+"
   className?: string;

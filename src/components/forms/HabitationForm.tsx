@@ -11,13 +11,7 @@ interface HabitationFormProps {
   onSubmit: (data: Record<string, unknown>) => void;
 }
 
-interface SectionProps {
-  title: string;
-  num: string;
-  children: React.ReactNode;
-}
-
-const Section = ({ title, num, children }: SectionProps) => (
+const Section = ({ title, num, children }: { title: string; num: string; children: React.ReactNode }) => (
   <div className="bg-background border rounded-xl overflow-hidden">
     <div className="px-5 py-3 border-b bg-muted/30">
       <h4 className="text-xs font-bold text-foreground">{num} — {title}</h4>

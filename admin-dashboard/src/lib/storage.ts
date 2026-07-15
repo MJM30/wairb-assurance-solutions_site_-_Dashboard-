@@ -43,7 +43,9 @@ export function getAllUsers(): WairbUser[] {
   const raw = localStorage.getItem(USERS_KEY);
   if (!raw) return getDefaultUsers();
   try {
-    return JSON.parse(raw) as WairbUser[];
+    const parsed = JSON.parse(raw) as WairbUser[];
+    if (parsed.length === 0) return getDefaultUsers();
+    return parsed;
   } catch { return getDefaultUsers(); }
 }
 

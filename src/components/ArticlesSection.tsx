@@ -14,7 +14,7 @@ const articles = [
   },
   {
     icon: Lightbulb,
-    title: "Sensibilisation et formation",
+    title: "Sensibilisation, formation & suivi",
     description: "Former les équipes permet une meilleure culture du risque et une meilleure prévention."
   }
 ];
@@ -24,9 +24,9 @@ const ArticlesSection = () => {
     <section className="py-20 bg-white">
       <div className="container">
         <Reveal animation="reveal" className="text-center mb-16">
-          <span className="badge-primary mb-3 inline-block">Conseils Pratiques</span>
+          <span className="badge-primary mb-3 inline-block">Autres services spécialisés</span>
           <h2 className="text-3xl md:text-4xl font-extrabold text-foreground tracking-tight">
-            Articles / Conseils en Assurance
+            Assistance et Conseils sur la gestion des risques 
           </h2>
         </Reveal>
 

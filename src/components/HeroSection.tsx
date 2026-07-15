@@ -52,7 +52,7 @@ const HeroSection = ({ onRequestClick }: HeroSectionProps) => {
         <div
           key={img}
           className={`absolute inset-0 transition-opacity duration-[2000ms] ease-in-out ${
-            index === currentIdx ? "opacity-40" : "opacity-0"
+            index === currentIdx ? "opacity-100" : "opacity-0"
           }`}
           style={{
             backgroundImage: `url(${img})`,
@@ -63,7 +63,7 @@ const HeroSection = ({ onRequestClick }: HeroSectionProps) => {
       ))}
 
       {/* Hero Gradient Overlay for better readability */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-[1]" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-[1]" />
       
       {/* Subtle pattern overlay */}
       <div className="absolute inset-0 opacity-[0.03] z-[2]" style={{
@@ -107,14 +107,14 @@ const HeroSection = ({ onRequestClick }: HeroSectionProps) => {
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-primary-foreground leading-tight tracking-tight">
               Protégez ce qui
               <br />
-              <span className="text-primary">compte le plus</span>
+              <span className="text-primary">compte le plus pour vous</span>
             </h1>
           </Reveal>
 
           <Reveal animation="reveal-left" delay={400}>
             <p className="text-sm md:text-base text-primary-foreground/70 max-w-xl leading-relaxed">
-              WAIRB DRC SAS, votre partenaire de confiance en courtage d'assurance et réassurance à Kinshasa. 
-              Des solutions sur mesure pour particuliers et entreprises.
+              WAIRB DRC SAS, votre partenaire de confiance en courtage d'assurance et réassurance. 
+              Des solutions sur mesure pour Tous.
             </p>
             <p className="text-base md:text-lg text-primary font-semibold max-w-xl leading-relaxed mt-3">
               Sachez que nous contacter ne vous fera pas payer plus que ce que vous deviez.

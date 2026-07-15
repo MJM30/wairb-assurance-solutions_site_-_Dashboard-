@@ -40,13 +40,13 @@ const Footer = () => {
             <div className="space-y-3 text-xs text-primary-foreground/60">
               <div>
                 <p className="font-semibold text-white mb-1">Kinshasa</p>
-                <p className="leading-relaxed">Avenue des Aviateurs n°3, Quartier de la Gare, Commune de la Gombe, Kinshasa – RDC</p>
+                <p className="leading-relaxed">M8X7+J82, Dongo, Kinshasa</p>
                 <div className="flex items-center gap-2 mt-1.5">
                   <Phone className="h-3 w-3 shrink-0" />
-                  <span>+243 822 135 376</span>
+                  <span>+243 962 778 967</span>
                 </div>
               </div>
-              <div className="pt-2 border-t border-white/10">
+              <div className="pt-2">
                 <p className="font-semibold text-white mb-1">Abidjan</p>
                 <p className="leading-relaxed">Cocody Riviera Palmeraie, 3e étage, face à la Sodéc</p>
                 <div className="flex items-center gap-2 mt-1.5">
@@ -54,7 +54,7 @@ const Footer = () => {
                   <span>+225 27 22 40 03 / 07 09 09 79 61</span>
                 </div>
               </div>
-              <div className="pt-2 border-t border-white/10 space-y-1.5">
+              <div className="pt-2 space-y-1.5">
                 <div className="flex items-center gap-2">
                   <Mail className="h-3 w-3 shrink-0" />
                   <span>contact@wairb.com</span>
@@ -69,7 +69,7 @@ const Footer = () => {
 
           <div className="space-y-4">
             <h4 className="font-semibold text-sm">Agrément ARCA</h4>
-            <div className="bg-white/5 border border-white/10 p-4 rounded-xl space-y-2">
+            <div className="bg-white/5 p-4 rounded-xl space-y-2">
               <div className="flex items-center gap-2 text-primary-foreground/90">
                 <ShieldCheck className="h-4 w-4 text-primary" />
                 <span className="text-[11px] font-bold">Société agréée</span>
@@ -135,7 +135,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t border-primary-foreground/10 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] text-primary-foreground/40 font-medium">
+        <div className="mt-10 pt-6 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] text-primary-foreground/40 font-medium">
           <p>© {new Date().getFullYear()} WAIRB DRC SAS. Tous droits réservés.</p>
           <p>République Démocratique du Congo | Immatriculation : A2424184P</p>
         </div>
