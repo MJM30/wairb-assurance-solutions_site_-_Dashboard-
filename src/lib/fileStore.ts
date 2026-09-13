@@ -56,10 +56,19 @@ export async function fileGetClients(): Promise<StoredClient[]> {
 }
 
 export async function fileCreateClient(
-  data: Omit<StoredClient, "dateInscription" | "statut" | "datePaiement" | "montantPaye">
+  data: Omit<StoredClient, "dateInscription" | "statut" | "datePaiement" | "montantPaye" | "modePaiement" | "preuvePaiementNom" | "preuvePaiementType" | "preuvePaiementData"> & {
+    modePaiement?: string | null;
+    preuvePaiementNom?: string | null;
+    preuvePaiementType?: string | null;
+    preuvePaiementData?: string | null;
+  }
 ): Promise<StoredClient> {
   const clients = await readClients();
   const client: StoredClient = {
+    modePaiement: null,
+    preuvePaiementNom: null,
+    preuvePaiementType: null,
+    preuvePaiementData: null,
     ...data,
     dateInscription: new Date().toISOString(),
     statut: "en_attente",
