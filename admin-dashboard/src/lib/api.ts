@@ -5,7 +5,7 @@ const NEXT_API_BASE_URL =
   ((import.meta as any).env && (import.meta as any).env.VITE_NEXT_API_BASE_URL) || 
   "http://localhost:3000";
 
-async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
+export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(`${NEXT_API_BASE_URL}${path}`, {
     ...init,
     headers: {

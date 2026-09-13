@@ -2,17 +2,25 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { ArrowRight, CheckCircle2, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Reveal from "./Reveal";
+import { useCmsPage } from "@/context/CmsContext";
 
 interface HeroSectionProps {
   onRequestClick: () => void;
 }
 
-const backgroundImages = [
-  "/images/img_15.jpg",
-  "/images/img_09.jpg"
-];
-
 const HeroSection = ({ onRequestClick }: HeroSectionProps) => {
+  const { sections } = useCmsPage('accueil');
+  const heroData = sections.find((s: any) => s.type === 'hero');
+
+  const backgroundImages = heroData?.images?.map((i: any) => i.url) || [
+    "/images/img_15.jpg",
+    "/images/img_09.jpg"
+  ];
+
+  const titleLines = (heroData?.title || "Protégez ce qui\ncompte le plus pour vous").split('\n');
+  const fallbackTitlePart1 = "Protégez ce qui";
+  const fallbackTitlePart2 = "compte le plus pour vous";
+
   const [currentIdx, setCurrentIdx] = useState(0);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -21,7 +29,7 @@ const HeroSection = ({ onRequestClick }: HeroSectionProps) => {
     timerRef.current = setInterval(() => {
       setCurrentIdx((prev) => (prev + 1) % backgroundImages.length);
     }, 5000);
-  }, []);
+  }, [backgroundImages.length]);
 
   useEffect(() => {
     startTimer();
@@ -45,10 +53,12 @@ const HeroSection = ({ onRequestClick }: HeroSectionProps) => {
     startTimer();
   };
 
+  if (heroData && !heroData.visible) return null;
+
   return (
     <section id="accueil" className="relative min-h-screen flex items-end pb-16 bg-black overflow-hidden group/hero">
       {/* Background Images with Cross-fade */}
-      {backgroundImages.map((img, index) => (
+      {backgroundImages.map((img: string, index: number) => (
         <div
           key={img}
           className={`absolute inset-0 transition-opacity duration-[2000ms] ease-in-out ${
@@ -89,7 +99,7 @@ const HeroSection = ({ onRequestClick }: HeroSectionProps) => {
 
       {/* Pagination Dots */}
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex gap-2">
-        {backgroundImages.map((_, idx) => (
+        {backgroundImages.map((_: any, idx: number) => (
           <button
             key={idx}
             onClick={() => goToSlide(idx)}
@@ -105,20 +115,35 @@ const HeroSection = ({ onRequestClick }: HeroSectionProps) => {
         <div className="max-w-2xl space-y-6 translate-y-[100px]">
           <Reveal animation="reveal-left" delay={200}>
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-primary-foreground leading-tight tracking-tight">
-              Protégez ce qui
-              <br />
-              <span className="text-primary">compte le plus pour vous</span>
+              {titleLines.length > 1 ? (
+                <>
+                  {titleLines[0]}
+                  <br />
+                  <span className="text-primary">{titleLines.slice(1).join('\n')}</span>
+                </>
+              ) : heroData ? (
+                 <>
+                   {heroData.title}
+                 </>
+              ) : (
+                <>
+                  {fallbackTitlePart1}
+                  <br />
+                  <span className="text-primary">{fallbackTitlePart2}</span>
+                </>
+              )}
             </h1>
           </Reveal>
 
           <Reveal animation="reveal-left" delay={400}>
-            <p className="text-sm md:text-base text-primary-foreground/70 max-w-xl leading-relaxed">
-              WAIRB DRC SAS, votre partenaire de confiance en courtage d'assurance et réassurance. 
-              Des solutions sur mesure pour Tous.
+            <p className="text-sm md:text-base text-primary-foreground/70 max-w-xl leading-relaxed whitespace-pre-wrap">
+              {heroData?.description || "WAIRB DRC SAS, votre partenaire de confiance en courtage d'assurance et réassurance. Des solutions sur mesure pour Tous."}
             </p>
-            <p className="text-base md:text-lg text-primary font-semibold max-w-xl leading-relaxed mt-3">
-              Sachez que nous contacter ne vous fera pas payer plus que ce que vous deviez.
-            </p>
+            {(heroData?.extraFields?.reassuranceText || !heroData) && (
+              <p className="text-base md:text-lg text-primary font-semibold max-w-xl leading-relaxed mt-3">
+                {heroData?.extraFields?.reassuranceText || "Sachez que nous contacter ne vous fera pas payer plus que ce que vous deviez."}
+              </p>
+            )}
           </Reveal>
 
           <Reveal animation="reveal-left" delay={600}>
@@ -128,7 +153,7 @@ const HeroSection = ({ onRequestClick }: HeroSectionProps) => {
                 className="text-xs font-semibold px-6 gap-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 h-11"
                 onClick={onRequestClick}
               >
-                Soumettre une demande
+                {heroData?.primaryBtnText || "Soumettre une demande"}
                 <ArrowRight className="h-4 w-4" />
               </Button>
               <Button
@@ -137,7 +162,9 @@ const HeroSection = ({ onRequestClick }: HeroSectionProps) => {
                 className="text-xs font-semibold px-6 rounded-lg h-11 border-primary-foreground/20 text-primary-foreground bg-transparent hover:bg-primary-foreground/10 hover:text-primary-foreground"
                 asChild
               >
-                <a href="#solutions">Découvrir nos solutions</a>
+                <a href={heroData?.secondaryBtnUrl || "#solutions"}>
+                  {heroData?.secondaryBtnText || "Découvrir nos solutions"}
+                </a>
               </Button>
             </div>
           </Reveal>

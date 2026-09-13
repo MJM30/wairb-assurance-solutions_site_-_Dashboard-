@@ -2,6 +2,8 @@
 // WAIRB CMS — Shared Content Management Storage & Utilities
 // ============================================================
 
+import { apiFetch } from './api';
+
 export type PageStatus = 'published' | 'draft' | 'unpublished';
 export type SectionType = 'hero' | 'stats' | 'process' | 'solutions' | 'articles' | 'faq' | 'about' | 'contact' | 'partners' | 'features' | 'timeline' | 'team' | 'banner' | 'custom';
 
@@ -69,23 +71,55 @@ export interface CmsArticle {
   updatedAt: string;
 }
 
+
+let cmsCache = {
+  pages: [] as CmsPage[],
+  sections: [] as CmsSection[],
+  articles: [] as CmsArticle[],
+  initialized: false
+};
+
+export async function initCmsStore() {
+  try {
+    const data = await apiFetch<any>('/api/cms');
+    if (data && (data.pages?.length || data.sections?.length || data.articles?.length)) {
+      cmsCache.pages = data.pages || [];
+      cmsCache.sections = data.sections || [];
+      cmsCache.articles = data.articles || [];
+    } else {
+      cmsCache.pages = getDefaultPages();
+      cmsCache.sections = getDefaultSections();
+      cmsCache.articles = getDefaultArticles();
+      pushCmsToServer();
+    }
+  } catch (err) {
+    console.error('Failed to init CMS store, using defaults', err);
+    cmsCache.pages = getDefaultPages();
+    cmsCache.sections = getDefaultSections();
+    cmsCache.articles = getDefaultArticles();
+  }
+  cmsCache.initialized = true;
+}
+
+function pushCmsToServer() {
+  if (!cmsCache.initialized) return;
+  apiFetch('/api/cms', {
+    method: 'POST',
+    body: JSON.stringify({
+      pages: cmsCache.pages,
+      sections: cmsCache.sections,
+      articles: cmsCache.articles
+    })
+  }).catch(e => console.error('Failed to push CMS data', e));
+}
+
 const CMS_PAGES_KEY = 'wairb_cms_pages';
 const CMS_SECTIONS_KEY = 'wairb_cms_sections';
 const CMS_ARTICLES_KEY = 'wairb_cms_articles';
 
 // ─── Pages Functions ─────────────────────────────────────────
 
-export function getCmsPages(): CmsPage[] {
-  const raw = localStorage.getItem(CMS_PAGES_KEY);
-  if (!raw) return getDefaultPages();
-  try {
-    const parsed = JSON.parse(raw) as CmsPage[];
-    if (parsed.length === 0) return getDefaultPages();
-    return parsed;
-  } catch {
-    return getDefaultPages();
-  }
-}
+export function getCmsPages(): CmsPage[] { return cmsCache.pages; }
 
 export function saveCmsPage(page: CmsPage): void {
   const pages = getCmsPages();
@@ -93,7 +127,8 @@ export function saveCmsPage(page: CmsPage): void {
   page.lastModified = new Date().toISOString();
   if (idx >= 0) pages[idx] = page;
   else pages.push(page);
-  localStorage.setItem(CMS_PAGES_KEY, JSON.stringify(pages));
+  cmsCache.pages = pages;
+  pushCmsToServer();
 }
 
 export function updatePageStatus(slug: string, status: PageStatus): void {
@@ -102,23 +137,14 @@ export function updatePageStatus(slug: string, status: PageStatus): void {
   if (page) {
     page.status = status;
     page.lastModified = new Date().toISOString();
-    localStorage.setItem(CMS_PAGES_KEY, JSON.stringify(pages));
+    cmsCache.pages = pages;
+  pushCmsToServer();
   }
 }
 
 // ─── Sections Functions ──────────────────────────────────────
 
-export function getAllCmsSections(): CmsSection[] {
-  const raw = localStorage.getItem(CMS_SECTIONS_KEY);
-  if (!raw) return getDefaultSections();
-  try {
-    const parsed = JSON.parse(raw) as CmsSection[];
-    if (parsed.length === 0) return getDefaultSections();
-    return parsed;
-  } catch {
-    return getDefaultSections();
-  }
-}
+export function getAllCmsSections(): CmsSection[] { return cmsCache.sections; }
 
 export function getCmsSections(pageSlug: string): CmsSection[] {
   const sections = getAllCmsSections().filter(s => s.pageSlug === pageSlug);
@@ -134,7 +160,8 @@ export function saveCmsSection(section: CmsSection): void {
   } else {
     sections.push(section);
   }
-  localStorage.setItem(CMS_SECTIONS_KEY, JSON.stringify(sections));
+  cmsCache.sections = sections;
+  pushCmsToServer();
 
   // Update sections count and status on parent page
   const pageSections = sections.filter(s => s.pageSlug === section.pageSlug);
@@ -144,7 +171,8 @@ export function saveCmsSection(section: CmsSection): void {
     pages[pIdx].sectionsCount = pageSections.length;
     pages[pIdx].status = 'draft';
     pages[pIdx].lastModified = new Date().toISOString();
-    localStorage.setItem(CMS_PAGES_KEY, JSON.stringify(pages));
+    cmsCache.pages = pages;
+  pushCmsToServer();
   }
 }
 
@@ -154,7 +182,8 @@ export function deleteCmsSection(id: string): void {
   if (!section) return;
 
   const filtered = sections.filter(s => s.id !== id);
-  localStorage.setItem(CMS_SECTIONS_KEY, JSON.stringify(filtered));
+  cmsCache.sections = filtered;
+  pushCmsToServer();
 
   if (section) {
     const pageSections = filtered.filter(s => s.pageSlug === section.pageSlug);
@@ -164,7 +193,8 @@ export function deleteCmsSection(id: string): void {
       pages[pIdx].sectionsCount = pageSections.length;
       pages[pIdx].status = 'draft';
       pages[pIdx].lastModified = new Date().toISOString();
-      localStorage.setItem(CMS_PAGES_KEY, JSON.stringify(pages));
+      cmsCache.pages = pages;
+  pushCmsToServer();
     }
   }
 }
@@ -206,7 +236,8 @@ export function moveCmsSection(id: string, direction: 'up' | 'down'): void {
     if (mainIdx >= 0) sections[mainIdx].order = s.order;
   });
 
-  localStorage.setItem(CMS_SECTIONS_KEY, JSON.stringify(sections));
+  cmsCache.sections = sections;
+  pushCmsToServer();
 }
 
 export function duplicateCmsSection(id: string): CmsSection | null {
@@ -232,17 +263,7 @@ export function publishPageChanges(pageSlug: string): void {
 
 // ─── Articles Functions ─────────────────────────────────────
 
-export function getCmsArticles(): CmsArticle[] {
-  const raw = localStorage.getItem(CMS_ARTICLES_KEY);
-  if (!raw) return getDefaultArticles();
-  try {
-    const parsed = JSON.parse(raw) as CmsArticle[];
-    if (parsed.length === 0) return getDefaultArticles();
-    return parsed;
-  } catch {
-    return getDefaultArticles();
-  }
-}
+export function getCmsArticles(): CmsArticle[] { return cmsCache.articles; }
 
 export function saveCmsArticle(article: CmsArticle): void {
   const articles = getCmsArticles();
@@ -253,12 +274,14 @@ export function saveCmsArticle(article: CmsArticle): void {
   } else {
     articles.unshift(article);
   }
-  localStorage.setItem(CMS_ARTICLES_KEY, JSON.stringify(articles));
+  cmsCache.articles = articles;
+  pushCmsToServer();
 }
 
 export function deleteCmsArticle(id: string): void {
   const articles = getCmsArticles().filter(a => a.id !== id);
-  localStorage.setItem(CMS_ARTICLES_KEY, JSON.stringify(articles));
+  cmsCache.articles = articles;
+  pushCmsToServer();
 }
 
 export function toggleArticlePublish(id: string): void {
@@ -280,7 +303,8 @@ function getDefaultPages(): CmsPage[] {
     { slug: 'contact', title: 'Contact', status: 'published', lastModified: new Date().toISOString(), sectionsCount: 4 },
     { slug: 'actualites', title: 'Actualités', status: 'published', lastModified: new Date().toISOString(), sectionsCount: 2 },
   ];
-  localStorage.setItem(CMS_PAGES_KEY, JSON.stringify(pages));
+  cmsCache.pages = pages;
+  pushCmsToServer();
   return pages;
 }
 
@@ -623,7 +647,8 @@ function getDefaultSections(): CmsSection[] {
     }
   ];
 
-  localStorage.setItem(CMS_SECTIONS_KEY, JSON.stringify(sections));
+  cmsCache.sections = sections;
+  pushCmsToServer();
   return sections;
 }
 
@@ -674,6 +699,7 @@ function getDefaultArticles(): CmsArticle[] {
     }
   ];
 
-  localStorage.setItem(CMS_ARTICLES_KEY, JSON.stringify(articles));
+  cmsCache.articles = articles;
+  pushCmsToServer();
   return articles;
 }

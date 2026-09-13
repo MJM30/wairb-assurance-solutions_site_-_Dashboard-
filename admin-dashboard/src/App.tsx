@@ -13,6 +13,7 @@ import Users from './pages/Users';
 import CmsDashboard from './pages/cms/CmsDashboard';
 import CmsPageEditor from './pages/cms/CmsPageEditor';
 import CmsActualites from './pages/cms/CmsActualites';
+import CmsLoader from './components/cms/CmsLoader';
 import { getAdminRole } from './lib/storage';
 
 function isAuthenticated() {
@@ -51,9 +52,11 @@ export default function App() {
           <Route path="expenses" element={<Expenses />} />
           <Route path="visiteurs" element={<Visitors />} />
           <Route path="utilisateurs" element={<Users />} />
-          <Route path="cms" element={<CmsDashboard />} />
-          <Route path="cms/pages/:slug" element={<CmsPageEditor />} />
-          <Route path="cms/actualites" element={<CmsActualites />} />
+          <Route path="cms" element={<CmsLoader />}>
+            <Route index element={<CmsDashboard />} />
+            <Route path="pages/:slug" element={<CmsPageEditor />} />
+            <Route path="actualites" element={<CmsActualites />} />
+          </Route>
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
