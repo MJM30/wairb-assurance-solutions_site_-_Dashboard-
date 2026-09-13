@@ -12,11 +12,12 @@ let useFileStore: boolean | null = null;
 async function dbAvailable(): Promise<boolean> {
   if (useFileStore !== null) return !useFileStore;
   try {
-    await query("SELECT 1");
+    const { initDb } = await import("@/lib/db");
+    await initDb();
     useFileStore = false;
     return true;
   } catch (err) {
-    console.warn("MySQL unavailable, using file store:", (err as Error).message);
+    console.warn("DB unavailable, using file store:", (err as Error).message);
     useFileStore = true;
     return false;
   }

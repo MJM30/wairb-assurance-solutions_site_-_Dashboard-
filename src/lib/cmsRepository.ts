@@ -6,18 +6,12 @@ let useFileStore: boolean | null = null;
 async function dbAvailable(): Promise<boolean> {
   if (useFileStore !== null) return !useFileStore;
   try {
-    await query("SELECT 1");
-    // Also ensure the wairb_cms_store table exists
-    await query(`
-      CREATE TABLE IF NOT EXISTS wairb_cms_store (
-        id INT PRIMARY KEY,
-        data JSON NOT NULL
-      )
-    `);
+    const { initDb } = await import("@/lib/db");
+    await initDb();
     useFileStore = false;
     return true;
   } catch (err) {
-    console.warn("MySQL unavailable or table creation failed, using file store:", (err as Error).message);
+    console.warn("DB unavailable or table creation failed, using file store:", (err as Error).message);
     useFileStore = true;
     return false;
   }
