@@ -1,7 +1,8 @@
 import type { VisitorRecord, WairbClient } from "./storage";
 
 const NEXT_API_BASE_URL =
-  import.meta.env.VITE_NEXT_API_BASE_URL || "http://localhost:3000";
+  (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_API_BASE_URL) ||
+  "http://localhost:3000";
 
 async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(`${NEXT_API_BASE_URL}${path}`, {
