@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Mail, Phone, MapPin, Send, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
+import { useCmsPage } from "@/context/CmsContext";
 
 const contactSlides = [
   {
@@ -85,6 +86,12 @@ const Contact = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const { sections, loading } = useCmsPage('contact');
+
+  const isVisible = (id: string) => {
+    if (loading) return true;
+    return sections.some((s: any) => s.id === id);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -115,6 +122,7 @@ const Contact = () => {
       <Navbar onRequestClick={() => {}} />
       
       {/* Hero Header */}
+      {isVisible('sec_ct_hero') && (
       <section className="relative h-screen min-h-[600px] overflow-hidden flex items-end">
         <div className="absolute inset-0 z-0">
           <video 
@@ -133,8 +141,10 @@ const Contact = () => {
           <ContactTicker />
         </div>
       </section>
+      )}
 
       {/* Main Content */}
+      {isVisible('sec_ct_coords') && (
       <section className="py-20 overflow-hidden">
         <div className="container">
           <div className="grid lg:grid-cols-2 gap-16">
@@ -309,6 +319,7 @@ const Contact = () => {
           </div>
         </div>
       </section>
+      )}
 
       <Footer />
     </div>

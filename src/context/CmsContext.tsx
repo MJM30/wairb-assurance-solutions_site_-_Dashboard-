@@ -34,12 +34,12 @@ export function useCms() {
 
 export function useCmsPage(pageSlug: string) {
   const context = useCms();
-  if (!context) return { page: null, sections: [] };
+  if (!context) return { page: null, sections: [], loading: true };
 
   const page = context.pages.find((p: any) => p.slug === pageSlug) || null;
   const sections = context.sections
     .filter((s: any) => s.pageSlug === pageSlug && s.visible)
     .sort((a: any, b: any) => a.order - b.order);
 
-  return { page, sections };
+  return { page, sections, loading: false };
 }

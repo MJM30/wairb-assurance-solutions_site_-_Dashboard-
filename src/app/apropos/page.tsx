@@ -7,19 +7,27 @@ import MultiStepForm from "@/components/MultiStepForm";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Users, Shield, Award, Target, Heart, Eye, Gem, CheckCircle2, TrendingUp } from "lucide-react";
 import PartnersMarquee from "@/components/PartnersMarquee";
+import { useCmsPage } from "@/context/CmsContext";
 
 const About = () => {
   const [formOpen, setFormOpen] = useState(false);
+  const { sections, loading } = useCmsPage('apropos');
 
   const openForm = useCallback(() => {
     setFormOpen(true);
   }, []);
+
+  const isVisible = (id: string) => {
+    if (loading) return true;
+    return sections.some((s: any) => s.id === id);
+  };
 
   return (
     <div className="min-h-screen bg-white overflow-x-hidden w-full max-w-full">
       <Navbar onRequestClick={openForm} />
       
       {/* Hero Section */}
+      {isVisible('sec_ap_hero') && (
       <section className="relative h-screen flex items-center overflow-hidden">
         <div 
           className="absolute inset-0 z-0"
@@ -66,8 +74,10 @@ const About = () => {
           </div>
         </div>
       </section>
+      )}
 
       {/* History & Timeline */}
+      {isVisible('sec_ap_timeline') && (
       <section className="py-24 bg-surface-sunken relative overflow-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:24px_24px]"></div>
         <div className="container relative z-10">
@@ -128,8 +138,10 @@ const About = () => {
           </div>
         </div>
       </section>
+      )}
 
       {/* Mission, Vision, Valeurs */}
+      {isVisible('sec_ap_values') && (
       <section id="valeurs" className="py-24 bg-white relative overflow-hidden">
         <div className="container">
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
@@ -218,8 +230,10 @@ const About = () => {
           </div>
         </div>
       </section>
+      )}
 
       {/* Governance */}
+      {isVisible('sec_ap_gov') && (
       <section id="gouvernance" className="py-24 bg-white overflow-hidden">
         <div className="container">
           <div className="flex flex-wrap -mx-4 items-center">
@@ -261,8 +275,10 @@ const About = () => {
           </div>
         </div>
       </section>
+      )}
 
       {/* Executive Management */}
+      {isVisible('sec_ap_dg') && (
       <section id="direction-generale" className="py-24 bg-surface-sunken overflow-hidden">
         <div className="container">
           <div className="flex flex-wrap -mx-4 items-center">
@@ -309,8 +325,10 @@ const About = () => {
           </div>
         </div>
       </section>
+      )}
 
       {/* Teams */}
+      {isVisible('sec_ap_team') && (
       <section className="py-24 bg-surface-sunken overflow-hidden">
         <div className="container">
           <div className="text-center max-w-3xl mx-auto mb-16">
@@ -381,8 +399,10 @@ const About = () => {
           </div>
         </div>
       </section>
+      )}
 
       {/* CTA */}
+      {isVisible('sec_ap_hero') && (
       <section className="py-24 hero-gradient relative overflow-hidden">
         <div className="container relative z-10 text-center text-white">
           <Reveal animation="reveal-scale">
@@ -394,12 +414,13 @@ const About = () => {
           </Reveal>
         </div>
       </section>
+      )}
 
       <MultiStepForm
         open={formOpen}
         onClose={() => setFormOpen(false)}
       />
-      <PartnersMarquee />
+      {isVisible('sec_ap_hero') && <PartnersMarquee />}
       <Footer />
     </div>
   );

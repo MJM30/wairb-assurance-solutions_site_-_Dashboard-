@@ -8,9 +8,12 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle2, Shield, Award, Target, AlertTriangle } from "lucide-react";
 import PartnersMarquee from "@/components/PartnersMarquee";
 
+import { useCmsPage } from "@/context/CmsContext";
+
 const NosSolutions = () => {
   const [formOpen, setFormOpen] = useState(false);
   const [preselectedType, setPreselectedType] = useState("");
+  const { sections, loading } = useCmsPage('nos-solutions');
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -25,6 +28,11 @@ const NosSolutions = () => {
     setPreselectedType(type);
     setFormOpen(true);
   }, []);
+
+  const isVisible = (id: string) => {
+    if (loading) return true;
+    return sections.some((s: any) => s.id === id);
+  };
 
   const solutions = [
     {
@@ -77,6 +85,7 @@ const NosSolutions = () => {
       
       <main className="pt-16 overflow-x-hidden w-full max-w-full">
         {/* Hero Section */}
+        {isVisible('sec_sol_hero') && (
         <section className="relative h-[calc(100vh-64px)] min-h-[500px] flex items-center overflow-hidden">
           <div className="absolute inset-0 z-0">
             <img 
@@ -101,8 +110,10 @@ const NosSolutions = () => {
             </Reveal>
           </div>
         </section>
+        )}
 
         {/* Categories Section */}
+        {isVisible('sec_sol_catalog') && (
         <section className="py-24 bg-white overflow-hidden">
           <div className="container">
             <Reveal animation="reveal" className="text-center mb-16">
@@ -170,9 +181,10 @@ const NosSolutions = () => {
             </div>
           </div>
         </section>
+        )}
 
         {/* Detailed Solutions */}
-        {solutions.map((solution, index) => (
+        {isVisible('sec_sol_list') && solutions.map((solution, index) => (
           <section 
             key={solution.id} 
             className={`py-20 overflow-hidden ${index % 2 === 1 ? 'bg-secondary/30' : 'bg-background'}`}
@@ -248,7 +260,7 @@ const NosSolutions = () => {
         </section>
       </main>
 
-      <PartnersMarquee />
+      {isVisible('sec_sol_hero') && <PartnersMarquee />}
       <Footer />
       
       <MultiStepForm
