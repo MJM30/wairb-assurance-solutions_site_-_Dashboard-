@@ -23,13 +23,43 @@ const ContactSection = () => {
     setFormState(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      const fullName = `${formState.nom} ${formState.postNom} ${formState.prenom}`.trim() || formState.nom;
+      const ref = `WAIRB-CT${Math.floor(Math.random() * 90000) + 10000}`;
+
+      const res = await fetch("/api/clients", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nom: fullName,
+          email: formState.email,
+          telephone: formState.adresse || "Non renseigné",
+          adressePhysique: formState.adresse || "",
+          domaineActivite: "Prise de contact",
+          ville: "Kinshasa",
+          pays: "RDC",
+          typeAssurance: "contact",
+          typeAssuranceLabel: "Demande Contact / Message",
+          matricule: ref,
+          detailsAssurance: {
+            nom: formState.nom,
+            postNom: formState.postNom,
+            prenom: formState.prenom,
+            message: formState.preoccupation,
+            adresse: formState.adresse,
+            dateEnvoi: new Date().toISOString(),
+          },
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Erreur lors de l'enregistrement");
+      }
+
       setIsSuccess(true);
       toast.success("Message envoyé avec succès !");
       setFormState({
@@ -40,7 +70,12 @@ const ContactSection = () => {
         adresse: "",
         preoccupation: ""
       });
-    }, 1500);
+    } catch (err) {
+      console.error("Erreur lors de l'envoi du formulaire contact:", err);
+      toast.error("Une erreur est survenue lors de l'envoi de votre message.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

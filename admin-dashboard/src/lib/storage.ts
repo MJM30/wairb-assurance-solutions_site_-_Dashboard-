@@ -198,6 +198,7 @@ export function getMontantByType(type: string): number {
     rc_pro: 1000,
     trc: 3500,
     petrole: 5000,
+    contact: 0,
   };
   return prices[type] ?? 500;
 }
@@ -250,6 +251,7 @@ export function getTypeLabel(id: string): string {
     rc_pro: 'RC Professionnelle',
     trc: 'Tous Risques Chantiers',
     petrole: 'Produits Pétroliers',
+    contact: 'Message / Contact',
   };
   return map[id] ?? id;
 }

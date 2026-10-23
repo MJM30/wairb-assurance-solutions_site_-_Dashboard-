@@ -9,9 +9,11 @@ import NewClientModal from '../components/NewClientModal';
 
 const COLORS: Record<string, string> = {
   habitation: '#16c784', auto: '#3b82f6', professionnelle: '#f59e0b', pvt: '#ef4444',
+  caution: '#8b5cf6', sante: '#ec4899', rc_manifestation: '#f97316', rc_pro: '#06b6d4',
+  trc: '#10b981', petrole: '#6366f1', contact: '#a855f7',
 };
 const TYPE_ICONS: Record<string, React.ElementType> = {
-  habitation: Home, auto: Car, professionnelle: Building2, pvt: AlertTriangle,
+  habitation: Home, auto: Car, professionnelle: Building2, pvt: AlertTriangle, contact: Mail,
 };
 
 function ClientModal({ client, onClose, onRefresh }: { client: WairbClient; onClose: () => void; onRefresh: () => void }) {
@@ -481,7 +483,11 @@ export default function Clients() {
     refresh();
     const onFocus = () => refresh();
     window.addEventListener('focus', onFocus);
-    return () => window.removeEventListener('focus', onFocus);
+    const interval = setInterval(() => refresh(), 10000);
+    return () => {
+      window.removeEventListener('focus', onFocus);
+      clearInterval(interval);
+    };
   }, []);
 
   async function refresh() {

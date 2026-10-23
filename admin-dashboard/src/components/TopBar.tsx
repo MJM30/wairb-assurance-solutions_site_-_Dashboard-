@@ -36,10 +36,15 @@ export default function TopBar() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    Promise.all([fetchClients(), fetchVisitors()])
-      .then(([clientsData, visitorsData]) => {
-        setClients(clientsData);
-        setTodayVisitors(visitorsData[visitorsData.length - 1]?.count ?? 0);
+    Promise.allSettled([fetchClients(), fetchVisitors()])
+      .then(([clientsRes, visitorsRes]) => {
+        if (clientsRes.status === 'fulfilled') {
+          setClients(clientsRes.value);
+        }
+        if (visitorsRes.status === 'fulfilled') {
+          const visitorsData = visitorsRes.value;
+          setTodayVisitors(visitorsData[visitorsData.length - 1]?.count ?? 0);
+        }
       })
       .catch((error) => {
         console.error('Erreur lors du chargement des informations du bandeau :', error);

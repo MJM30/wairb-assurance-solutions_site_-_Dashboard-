@@ -6,7 +6,7 @@ import {
 } from 'recharts';
 import {
   Users, CheckCircle, Clock, DollarSign,
-  TrendingUp, Eye, ArrowRight, Home, Car, Building2, AlertTriangle, Download,
+  TrendingUp, Eye, ArrowRight, Home, Car, Building2, AlertTriangle, Download, Mail,
 } from 'lucide-react';
 import { getMontantByType, type VisitorRecord, type WairbClient } from '../lib/storage';
 import { fetchClients, fetchVisitors } from '../lib/api';
@@ -17,12 +17,20 @@ const COLORS: Record<string, string> = {
   auto: '#3b82f6',
   professionnelle: '#f59e0b',
   pvt: '#ef4444',
+  caution: '#8b5cf6',
+  sante: '#ec4899',
+  rc_manifestation: '#f97316',
+  rc_pro: '#06b6d4',
+  trc: '#10b981',
+  petrole: '#6366f1',
+  contact: '#a855f7',
 };
 const TYPE_ICONS: Record<string, React.ElementType> = {
   habitation: Home,
   auto: Car,
   professionnelle: Building2,
   pvt: AlertTriangle,
+  contact: Mail,
 };
 
 function StatCard({ icon: Icon, label, value, sub, color, onClick }: {
@@ -79,24 +87,28 @@ export default function Dashboard() {
   const [visitors, setVisitors] = useState<VisitorRecord[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    let mounted = true;
+  const loadData = () => {
+    Promise.allSettled([fetchClients(), fetchVisitors()]).then(([clientsRes, visitorsRes]) => {
+      if (clientsRes.status === 'fulfilled') {
+        setClients(clientsRes.value);
+      }
+      if (visitorsRes.status === 'fulfilled') {
+        setVisitors(visitorsRes.value);
+      }
+      setLoading(false);
+    });
+  };
 
-    Promise.all([fetchClients(), fetchVisitors()])
-      .then(([clientsData, visitorsData]) => {
-        if (!mounted) return;
-        setClients(clientsData);
-        setVisitors(visitorsData);
-      })
-      .catch((error) => {
-        console.error('Erreur lors du chargement du dashboard :', error);
-      })
-      .finally(() => {
-        if (mounted) setLoading(false);
-      });
+  useEffect(() => {
+    loadData();
+
+    const onFocus = () => loadData();
+    window.addEventListener('focus', onFocus);
+    const interval = setInterval(loadData, 10000);
 
     return () => {
-      mounted = false;
+      window.removeEventListener('focus', onFocus);
+      clearInterval(interval);
     };
   }, []);
 

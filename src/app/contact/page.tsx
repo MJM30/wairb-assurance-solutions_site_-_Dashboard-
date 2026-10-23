@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Mail, Phone, MapPin, Send, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import { useCmsPage } from "@/context/CmsContext";
+import MultiStepForm from "@/components/MultiStepForm";
 
 const contactSlides = [
   {
@@ -86,6 +87,7 @@ const Contact = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [formOpen, setFormOpen] = useState(false);
   const { sections, loading } = useCmsPage('contact');
 
   const isVisible = (id: string) => {
@@ -98,12 +100,43 @@ const Contact = () => {
     setFormState(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      const fullName = `${formState.nom} ${formState.postNom} ${formState.prenom}`.trim() || formState.nom;
+      const ref = `WAIRB-CT${Math.floor(Math.random() * 90000) + 10000}`;
+
+      const res = await fetch("/api/clients", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nom: fullName,
+          email: formState.email,
+          telephone: formState.adresse || "Non renseigné",
+          adressePhysique: formState.adresse || "",
+          domaineActivite: "Prise de contact",
+          ville: "Kinshasa",
+          pays: "RDC",
+          typeAssurance: "contact",
+          typeAssuranceLabel: "Demande Contact / Message",
+          matricule: ref,
+          detailsAssurance: {
+            nom: formState.nom,
+            postNom: formState.postNom,
+            prenom: formState.prenom,
+            message: formState.preoccupation,
+            adresse: formState.adresse,
+            dateEnvoi: new Date().toISOString(),
+          },
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Erreur lors de l'enregistrement");
+      }
+
       setIsSuccess(true);
       toast.success("Message envoyé avec succès !");
       setFormState({
@@ -114,12 +147,17 @@ const Contact = () => {
         adresse: "",
         preoccupation: ""
       });
-    }, 1500);
+    } catch (err) {
+      console.error("Erreur lors de l'envoi du formulaire contact:", err);
+      toast.error("Une erreur est survenue lors de l'envoi de votre message.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <div className="min-h-screen bg-white overflow-x-hidden w-full max-w-full">
-      <Navbar onRequestClick={() => {}} />
+      <Navbar onRequestClick={() => setFormOpen(true)} />
       
       {/* Hero Header */}
       {isVisible('sec_ct_hero') && (
@@ -320,6 +358,11 @@ const Contact = () => {
         </div>
       </section>
       )}
+
+      <MultiStepForm
+        open={formOpen}
+        onClose={() => setFormOpen(false)}
+      />
 
       <Footer />
     </div>
